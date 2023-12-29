@@ -1,5 +1,6 @@
 import nltk
 import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def cleaning_data(data_frame: pd.DataFrame) -> pd.DataFrame:
@@ -61,7 +62,14 @@ def main():
     data_frame: pd.DataFrame = process_data(data_frame)
     data_frame = tokenize_data(data_frame)
 
-    print(data_frame)
+    # We join the tokens to get the resume as a string
+    data_frame["Resume_str"] = data_frame["Resume_str"].apply(lambda x: ' '.join(x))
+
+    # We initialize the TF-IDF vectorizer to convert the text into a matrix of TF-IDF features
+    tfidf_vectorizer = TfidfVectorizer()
+
+    # We fit and transform the data frame (dataset) to get the TF-IDF features
+    tfidf_matrix = tfidf_vectorizer.fit_transform(data_frame["Resume_str"])
 
 
 if __name__ == '__main__':
